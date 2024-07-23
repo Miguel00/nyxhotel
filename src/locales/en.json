@@ -1,0 +1,30 @@
+{
+  "home":{
+    "t1": "#Reservation",
+    "t2": "Verify",
+    "t3": "This field is required",
+    "t4": "Restaurant: ",
+    "t5": "Reservation ID not found",
+    "t6": "Not enough night of stay or reservation available already used",
+    "t7": "Date:",
+    "t8": "Timetable:",
+    "t9": "Persons:",
+    "t10": "E-mail:",
+    "t11": "Comments: (Allergies, celebrations or special requests)",
+    "t12": "Check Availability",
+    "t13": "Reservation Created",
+    "t14": "* There is already a reservation for this date",
+    "t15": "* Maximum number of people has been reached",
+    "t16": "* Restaurant full",
+    "t17": "* Booking window closed",
+    "t18": "English",
+    "t19": "Dress code: Formal (Gentlemen: closed shoe, dress shorts or pants, shirt with sleeves)",
+    "t20": "Please be aware that the reservation tolerance is of 10 minutes.",
+    "t21": "Tip is not included.",
+    "t22": "Not enough night of stay or reservation available already used",
+    "t23": "Hello",
+    "t24": ", thank you for your reservation!",
+    "t25": "If you book 'Breakfast Only' as your meal plan. No reservations are required for Umami or Chianti. Complimentary dinner reservations are only for the 'All Inclusive' meal plan with a minimum of 3 to 5 nights onwards.",
+    "t26": "This reservation has already checked out"
+  }
+}
