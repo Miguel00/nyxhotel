@@ -1,5 +1,5 @@
 <template >
-  <div class="container-fluid" :class="!successful ? 'bg-image': 'bg-image2' " >
+  <div class="container-fluid" :class="!successful ? 'bg-image': 'bg-image2' " style="min-height: 1000px;">
     <div class="row">
       <div class="col-lg-12" style="">
         <br><br><br><br><br><br>
@@ -41,7 +41,7 @@
           </div>
         </Form>
         
-        <Form v-if="successful" @submit="sendReservation" :validation-schema="schema2">
+        <Form v-if="successful" @submit="checkAvailabilityRestaurants" :validation-schema="schema2" >
             <div class="form-group">
               <div class="container">
                 <div class="row justify-content-center">
@@ -50,49 +50,43 @@
 
                       <div class="col-lg-12 text-left" style="margin-top:15px;">
                         <p class="c2" style="font-size:20px!important;" for="restaurantId"> {{ $t('home.t23') }} {{ nameClin }}</p>
+                        <label>{{ $t('home.t7') }} </label>
+                        <!-- <label class="c2" for="password">Password</label> -->
+                        <!-- Fm:  -->
+                        <Field name="reservationDate" as="select"  class="form-control" @change="resetDayAv">
+                          <option :value="minDate" >{{ minDate }}</option>
+                          <option :value="maxDate" >{{ maxDate }}</option>
+                        </Field>
+                        <!-- <Field name="reservationDate" type="date" :min="minDate" :max="maxDate" class="form-control" /> -->
+                        <ErrorMessage name="reservationDate" class="error-feedback" />
+                      </div>
+
+                      <div class="col-lg-12 text-left" style="margin-top:15px;">
                         <label>{{ $t('home.t9') }}</label>
-                        <Field name="people" as="select" class="form-control">
-                          <option v-for="(option, index) in people" :key="index"  :value="index+1">
+                        <Field name="people" as="select" class="form-control" @change="resetDayAv">
+                          <option v-for="(option, index) in totalOccupation" :key="index"  :value="index+1">
                             {{ index + 1 }}
                           </option>
                         </Field>
                         <ErrorMessage name="people" class="error-feedback" />
                       </div>
 
-                      <div class="col-lg-12 text-left" style="margin-top:15px;">
-                        <label>{{ $t('home.t7') }} </label>
-                        <!-- <label class="c2" for="password">Password</label> -->
-                        <!-- Fm:  -->
-                        <Field name="reservationDate" as="select"  class="form-control" >
-                          <option :value="minDate" >{{ minDate }}</option>
-                          <option :value="maxDate" >{{ maxDate }}</option>
-                        </Field>
-                        <!-- <Field name="reservationDate" type="date" :min="minDate" :max="maxDate" class="form-control" /> -->
-                        <ErrorMessage name="reservationDate" class="error-feedback" />
-                        
-                      </div>
 
-                      <div class="col-lg-12" style="margin-top:15px;">
+                      <!-- <div class="col-lg-12" style="margin-top:15px;">
                           
                           <label class="c2" for="restaurantId"> {{ $t('home.t4') }}</label>
                             <br>
                             <Field name="restaurantId" as="select"  class="form-control" >
-                              <!-- <option value="" disabled>Restaurant: </option> -->
                               <option v-for="(option, index) in restaurants" :key="index"  :value="option.restaurant.id" :disabled="!option.valid">
                                 {{ option.restaurant.name }}
                               </option>
                             </Field>
                             <ErrorMessage name="restaurantId"  class="error-feedback" />
-                            <!-- <Field v-slot="{ value }" name="drink" as="select" multiple>
-                              <option value="" disabled>Select a drink</option>
-                              <option v-for="drink in drinks" :key="drink" :value="drink" :selected="value && value.includes(drink)">{{ drink }}</option>
-                            </Field> -->
                       </div>
 
                       <div class="col-lg-12 text-left" style="margin-top:15px;">
                           <label>{{ $t('home.t8') }} </label>
                           <Field name="schedule" as="select" class="form-control">
-                            <!-- <option value="" disabled>Hour: </option> -->
                             <option value="18:00" >18:00</option>
                             <option value="19:00" >19:00</option>
                             <option value="20:00" >20:00</option>
@@ -100,36 +94,17 @@
                             <option value="22:00" >22:00</option>       
                           </Field>
                           <ErrorMessage name="schedule" class="error-feedback" />
-                      </div>
-
-                      
-
-                      <div class="col-lg-12 text-left" style="margin-top:15px;">
-                        <label class="c2" for="email">{{ $t('home.t10') }}</label>
-                        <Field name="email" type="email" class="form-control" />
-                        <ErrorMessage name="email" class="error-feedback" />
-                      </div>
-
-                      <div class="col-lg-12 text-left" style="margin-top:15px;">
-                        <label class="c2" for="clientNotes">{{ $t('home.t11') }}</label>
-                        <!-- <textarea name="comments" type="textarea" class="form-control" rows="4" cols="50" ></textarea> -->
-                        <Field name="clientNotes" as="textarea" class="form-control" rows="4" cols="50" />
-                        <ErrorMessage name="clientNotes" class="error-feedback" />
-                        
-                        <p><sub style="color:#007bff;" >{{verifyReservationS}}</sub></p>
-                        <!-- <sub style="color:#28a745;">{{verifyReservationSS}}</sub> -->
-                      </div>
-
+                      </div> -->
                     </div>
                   </div>
                 </div>
-                <div class="row justify-content-center">
+                <div class="row justify-content-center" >
                   <div class="col-lg-3">
                     <div class="form-group">
                       <br>
-                      <button  class="btn btn-primary btn-block" style="background-color:rgb(73,105,144);border-color:rgb(73,105,144);" :disabled="loading">
+                      <button type="submit" class="btn btn-primary btn-block" style="background-color:rgb(73,105,144);border-color:rgb(73,105,144);" :disabled="checkAvailabilityRestaurantsLoading">
                         <span
-                          v-show="loading"
+                          v-show="checkAvailabilityRestaurantsLoading"
                           class="spinner-border spinner-border-sm"
                         ></span>
                           {{ $t('home.t12') }}
@@ -137,16 +112,72 @@
                     </div>
                   </div>
                 </div> 
-                <div class="row justify-content-center">
-                  <div class="col-lg-6" style="color:white;">
-                    <ul>
-                      <li>{{ $t('home.t19') }}</li>
-                      <li>{{ $t('home.t20') }}</li>
-                      <li>{{ $t('home.t21') }}</li>
-                    </ul>
-                    <p style="color:white;">
-</p>
+              </div>
+            </div>
+        </Form>
+        <Form  v-if="successful && dateAvailability.valid" @submit="sendReservation" :validation-schema="schema3" v-slot="{ values, setFieldValue }">
+            <div class="container">
+              <h4 class="text-center text-white my-3">Selecciona el restaurante y horario disponible</h4>
+              <div class="row justify-content-center">
+                <div class="col-md-3 col-6 my-2" v-for="av in dateAvailability.availability" :key="av.restaurant.id">
+                  <h3 class="text-white text-center">{{av.restaurant.name}}</h3>
+                  <div v-for="(schedule,i) in av.schedules" :key="i">
+                    <button 
+                      type="button" 
+                      style="width: 100px;" 
+                      :class="{active:values.schedule == schedule.schedule && values.restaurantId == av.restaurant.id}"
+                      class="mx-auto btn btn-primary btn-aux btn-small btn-block mb-2" 
+                      @click="() => {setFieldValue('schedule', schedule.schedule); setFieldValue('restaurantId', av.restaurant.id)}"
+                      v-if="people <= schedule.availability"
+                      >
+                        {{schedule.schedule}} <font-awesome-icon v-if="values.schedule == schedule.schedule && values.restaurantId == av.restaurant.id" icon="check" />
+                    </button>                    
                   </div>
+                </div>
+              </div>
+              <div class="text-center">
+                <ErrorMessage name="schedule" class="error-feedback" />
+              </div>
+              <div class="row justify-content-center">
+                <div class="col-lg-4">
+                  <div class="text-left" style="margin-top:15px;">
+                    <label class="c2" for="email">{{ $t('home.t10') }}</label>
+                    <Field name="email" type="email" class="form-control" />
+                    <ErrorMessage name="email" class="error-feedback" />
+                  </div>
+
+                  <div class="text-left" style="margin-top:15px;">
+                    <label class="c2" for="clientNotes">{{ $t('home.t11') }}</label>
+                    <Field name="clientNotes" as="textarea" class="form-control" rows="4" cols="50" />
+                    <ErrorMessage name="clientNotes" class="error-feedback" />
+                    
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-center" >
+                  <div class="col-lg-3">
+                    <div class="form-group">
+                      <br>
+                      <button type="submit" class="btn btn-primary btn-block" style="background-color:rgb(73,105,144);border-color:rgb(73,105,144);" :disabled="loading">
+                        <span
+                          v-show="loading"
+                          class="spinner-border spinner-border-sm"
+                        ></span>
+                          {{ $t('home.t27') }}
+                      </button>
+                    </div>
+                  </div>
+                </div> 
+                <p class="mt-0 text-center" style="color:#007bff;">{{verifyReservationS}}</p>
+
+              <div class="row justify-content-center mt-5">
+                <div class="col-lg-6" style="color:white;">
+                  <ul>
+                    <li>{{ $t('home.t19') }}</li>
+                    <li>{{ $t('home.t20') }}</li>
+                    <li>{{ $t('home.t21') }}</li>
+                  </ul>
+                  <p style="color:white;"></p>
                 </div>
               </div>
             </div>
@@ -192,22 +223,26 @@ export default {
         .required(() => this.$t('home.t3'))
     });
     const schema2 = yup.object().shape({
-      restaurantId: yup
-        .string()
-        .required(() => this.$t('home.t3')),
       reservationDate: yup
         .string()
         .required(() => this.$t('home.t3')),
-      schedule: yup
+      people: yup
         .string()
         .required(() => this.$t('home.t3')),
-      people: yup
+    });
+    const schema3 = yup.object().shape({
+      restaurantId: yup
+        .string()
+        .required(() => this.$t('home.t3')),
+      schedule: yup
         .string()
         .required(() => this.$t('home.t3')),
       email: yup
         .string()
         .required(() => this.$t('home.t3'))
         .email("Email is invalid!"),
+      clientNotes: yup
+        .string(),
 
     });
     return {
@@ -226,27 +261,55 @@ export default {
       code: "",
       schema,
       schema2,
+      schema3,
       loading: false,
       dateToday:[],
-      dateTomorrow:[]
+      dateTomorrow:[],
+      dateAvailability:{valid:false},
+      dateAvailabilityLoaded: false,
+      checkAvailabilityRestaurantsLoading:false,
+      reservationDate:null,
     };
   },
   mounted() {
-    UserService.getPublicContent().then(
-      (response) => {
-        this.content = response.data;
-      },
-      (error) => {
-        this.content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-      }
-    );
+    // UserService.getPublicContent().then(
+    //   (response) => {
+    //     this.content = response.data;
+    //   },
+    //   (error) => {
+    //     this.content =
+    //       (error.response &&
+    //         error.response.data &&
+    //         error.response.data.message) ||
+    //       error.message ||
+    //       error.toString();
+    //   }
+    // );
   },
   methods: {
+    resetDayAv(){
+      this.dateAvailability = {valid:false}
+      this.dateAvailabilityLoaded = false      
+    },
+    checkAvailabilityRestaurants(values){
+      this.checkAvailabilityRestaurantsLoading = true
+      this.people = values.people
+      this.reservationDate = values.reservationDate
+      this.resetDayAv()
+
+      UserService.preCheckAvailability(
+        {
+          "hotelReservationReference": this.code,
+          "reservationDate": values.reservationDate
+        }
+      ).then(
+        (response) => {
+          this.checkAvailabilityRestaurantsLoading = false
+          this.dateAvailabilityLoaded = true
+          this.dateAvailability = response.data
+        }
+      );
+    },
     checkAvailability(user) {
       this.loading = true
       // this.$bvModal.show("my-modal")
@@ -281,6 +344,7 @@ export default {
             localStorage.setItem("hotelReservationReference", user.hotelReservationReference);
             localStorage.setItem("clientFirstName", data.client.name);
             this.nameClin = data.client.name
+            this.totalOccupation = Number(data.hotelReservation.occupation)
             this.people = Number(data.hotelReservation.occupation)
             this.restaurants = data.restaurants
             this.successful = true
@@ -297,7 +361,7 @@ export default {
             this.maxDate = today.getFullYear() + "-" + b + "-" + a
 
             
-            this.verifyFormSchedule(this.minDate, this.maxDate)
+            // this.verifyFormSchedule(this.minDate, this.maxDate)
             
           
           }
@@ -309,37 +373,37 @@ export default {
       );
       
     },
-    verifyFormSchedule(date1, date2){
+    // verifyFormSchedule(date1, date2){
 
 
-      let preCheckDayOne1 = {
-        "hotelReservationReference": this.code,
-        "reservationDate": date1
-      }
+      // {
+      //   "hotelReservationReference": this.code,
+      //   "reservationDate": date1
+      // }
 
-      let preCheckDayOne2 = {
-        "hotelReservationReference": this.code,
-        "reservationDate": date2
-      }
+      // let preCheckDayOne2 = {
+      //   "hotelReservationReference": this.code,
+      //   "reservationDate": date2
+      // }
 
-      UserService.preCheckAvailability(preCheckDayOne1).then(
-        (response) => {
-          // console.log(response.data.availability[0])
-          for (const num of response.data.availability){
-            console.log("HI:", num.schedules)
-          }
-        }
-      );
-      UserService.preCheckAvailability(preCheckDayOne2).then(
-        (response) => {
-          console.log(response.data.availability)
-          for (const num of response.data.availability){
-            console.log(".")          
-            num.schedules["restaurant"] = num.restaurant.name
-            console.log("HI:", num.schedules)
-          }
-        }
-      );
+      // UserService.preCheckAvailability(preCheckDayOne1).then(
+      //   (response) => {
+      //     // console.log(response.data.availability[0])
+      //     for (const num of response.data.availability){
+      //       console.log("HI:", num.schedules)
+      //     }
+      //   }
+      // );
+      // UserService.preCheckAvailability(preCheckDayOne2).then(
+      //   (response) => {
+      //     console.log(response.data.availability)
+      //     for (const num of response.data.availability){
+      //       console.log(".")          
+      //       num.schedules["restaurant"] = num.restaurant.name
+      //       console.log("HI:", num.schedules)
+      //     }
+      //   }
+      // );
 
       // UserService.preCheckAvailability(preCheckDayTwo).then(
       //   (response) => {
@@ -353,13 +417,16 @@ export default {
      
       
 
-    },
+    // },
     sendReservation(reservation) {
       this.loading = true
+      this.verifyReservationS = ''
       const today =  new Date()
       const today2 = today.getFullYear() + "-" + (today.getMonth() + 1).toString().padStart(2, "0") + "-" + today.getDate().toString().padStart(2, "0");
       
-      console.log(today2, reservation.reservationDate)
+      reservation.reservationDate = this.reservationDate
+      reservation.people = this.people
+
       const resDatee = reservation.reservationDate
       if(today2 == reservation.reservationDate){
         
@@ -382,9 +449,9 @@ export default {
             (response) => {
               
               reservation['resDate'] = reservation['reservationDate']
-              delete reservation['reservationDate'];
+              // delete reservation['reservationDate'];
               reservation['clientEmail'] = reservation['email']
-              delete reservation['email'];
+              // delete reservation['email'];
               if(response.data.valid){
                 // console.log("hereE: ", reservation)
                 reservation.lang = this.$i18n.locale
@@ -499,5 +566,8 @@ span {font-weight: 600;}
 @media(max-width:767px){
   .bg-image{background-image: url('../assets/motorbg3.png');height: 100vh;background-size:100% 100%;}
   .bg-image2{background-image: url('../assets/motorbg3.png');height: 100%;background-size:100% 100%;}
+}
+.btn-aux{
+  background-color:rgb(73,105,144);border-color:rgb(73,105,144);
 }
 </style>

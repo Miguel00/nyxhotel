@@ -1,12 +1,16 @@
 import axios from 'axios';
 import authHeader from './auth-header';
 
-const API_URL = 'https://a7a4-2806-10be-8-2ebf-a118-39d-5ce4-b5d8.ngrok-free.app/';
+const API_URL = 'http://localhost:5000/';
 
 class UserService {
 
   getRestaurants() {
     return axios.get(API_URL + 'restaurants', { headers: authHeader() });
+  }
+
+  cancelRes(token) {
+    return axios.delete(`${API_URL}client-reservations/${token}/cancel`);
   }
 
   checkAvailability(idReservation) {
