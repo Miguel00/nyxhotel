@@ -1,7 +1,7 @@
 import axios from 'axios';
 import authHeader from './auth-header';
 
-const API_URL = 'http://localhost:5000/';
+const API_URL = process.env.VUE_APP_API;
 
 class UserService {
 
@@ -18,7 +18,6 @@ class UserService {
   }
 
   createReservation(reservation) {
-    console.log("D4ta: ", reservation)
     return axios.post(API_URL + 'reservations', reservation, { headers: authHeader() });
   }
 

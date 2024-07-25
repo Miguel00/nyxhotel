@@ -51,11 +51,11 @@
                     <span style="text-align:left;">Horario: </span>
                     <Field name="schedule" as="select" class="form-control">
                       <option value="" disabled selected>Horario: </option>
-                      <option value="18:00" >18:00 </option>
-                      <option value="19:00" >19:00 </option>
-                      <option value="20:00" >20:00 </option>
-                      <option value="21:00" >21:00 </option>
-                      <option value="22:00" >22:00 </option>
+                      <option :value="`${i}:00`" v-for="i in [12,13,14,15,16,17,18,19,20,21,22,23]" :key="i">{{`${i}:00`}}</option>
+                      <!-- <option value="19:00" >19:00 </option> -->
+                      <!-- <option value="20:00" >20:00 </option> -->
+                      <!-- <option value="21:00" >21:00 </option> -->
+                      <!-- <option value="22:00" >22:00 </option> -->
                       <!-- <option v-for="(option, index) in options" :key="index"  :value="option.id">
                         {{ option.name }}
                       </option> -->
@@ -214,9 +214,41 @@
               <br><br>
               <h4>CREAR RESERVA SIN RESTRICCIONES</h4>
             </div>
-            <Form @submit="sendReservation" :validation-schema="schema2">
+            <Form ref="newResForm" @submit="sendReservation" :validation-schema="schema2" v-slot="{ values, setFieldValue }">
               <div class="form-group">
                 <div class="container">
+                  <div class="row justify-content-center">
+                    <div class="col-lg-12">
+                      <div class="row">
+                        <div class="col-lg-4" style="margin-top:15px;">
+                          <label class="c2" for="brazalete">Brazalete</label>
+                          <div class="input-group">
+                            <Field name="brazalete" class="form-control" ></Field>
+                            <button class="btn btn-outline-secondary" type="button" :disabled="searchLoading" @click="findRes(values.brazalete, setFieldValue)">
+                                <span
+                                  v-show="searchLoading"
+                                  class="spinner-border spinner-border-sm"
+                                  ></span>
+                              Buscar
+                            </button>
+                          </div>
+                          <!-- <ErrorMessage name="restaurantId"  class="error-feedback" /> -->
+                        </div>
+                        <div class="col-lg-4" style="margin-top:15px;">
+                            <label class="c2" for="brazalete">ID Reserva</label>
+                            <Field name="hotelReservationReference" class="form-control" readonly>
+                            </Field>
+                            <ErrorMessage name="hotelReservationReference"  class="error-feedback" />
+                        </div>
+                        <div class="col-lg-4" style="margin-top:15px;">
+                            <label class="c2" for="brazalete">Nombre huesped</label>
+                            <Field name="clientFirstName" class="form-control" readonly>
+                            </Field>
+                            <ErrorMessage name="clientFirstName"  class="error-feedback" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <div class="row justify-content-center">
                     <div class="col-lg-12">
                       <div class="row">
@@ -226,8 +258,8 @@
                               <br>
                               <Field name="restaurantId" as="select"  class="form-control" >
                                 <!-- <option value="" disabled>Restaurant: </option> -->
-                                <option v-for="(option, index) in restaurants" :key="index"  :value="option.restaurant.id" :disabled="!option.valid">
-                                  {{ option.restaurant.name }}
+                                <option v-for="(option, index) in options" :key="index"  :value="option.id">
+                                  {{ option.name }}
                                 </option>
                               </Field>
                               <ErrorMessage name="restaurantId"  class="error-feedback" />
@@ -241,46 +273,46 @@
                           <!-- <label class="c2" for="password">Password</label> -->
                           <!-- Fm:  -->
                           <div class="form-group">
-                            <Field name="start" type="date" class="form-control" />
-                            <ErrorMessage name="start" class="error-feedback" />
+                            <Field name="resDate" type="date" class="form-control" />
+                            <ErrorMessage name="resDate" class="error-feedback" />
                           </div>
                           <!-- <Field name="reservationDate" as="select"  class="form-control" >
                             <option :value="minDate" >{{ minDate }}</option>
                             <option :value="maxDate" >{{ maxDate }}</option>
                           </Field> -->
                           <!-- <Field name="reservationDate" type="date" :min="minDate" :max="maxDate" class="form-control" /> -->
-                          <ErrorMessage name="reservationDate" class="error-feedback" />
                         </div>
                         <div class="col-lg-4 text-left" style="margin-top:15px;">
                             <label>Horario </label>
                             <Field name="schedule" as="select" class="form-control">
-                              <!-- <option value="" disabled>Hour: </option> -->
-                              <option value="18:00" >18:00</option>
-                              <option value="19:00" >19:00</option>       
-                              <option value="20:00" >20:00</option>
-                              <option value="21:00" >21:00</option>       
-                              <option value="22:00" >22:00</option>       
+                                <option :value="`${i}:00`" v-for="i in [12,13,14,15,16,17,18,19,20,21,22,23]" :key="i">{{`${i}:00`}}</option>
                             </Field>
                             <ErrorMessage name="schedule" class="error-feedback" />
                         </div>
                         <div class="col-lg-4 text-left" style="margin-top:15px;">
                           <label>{{ $t('home.t9') }}</label>
                           <Field name="people" as="select" class="form-control">
-                            <option v-for="(option, index) in people" :key="index"  :value="index+1">
+                            <option v-for="(option, index) in [1,2,3,4,5,6,7,8,9,10]" :key="index"  :value="index+1">
                               {{ index + 1 }}
                             </option>
                           </Field>
                           <ErrorMessage name="people" class="error-feedback" />
                         </div>
                         <div class="col-lg-4 text-left" style="margin-top:15px;">
-                          <label class="c2" for="email">{{ $t('home.t10') }}</label>
-                          <Field name="email" type="email" class="form-control" />
-                          <ErrorMessage name="email" class="error-feedback" />
+                          <label class="c2" for="clientEmail">{{ $t('home.t10') }}</label>
+                          <Field name="clientEmail" type="email" class="form-control" />
+                          <ErrorMessage name="clientEmail" class="error-feedback" />
                         </div>
                         <div class="col-lg-4 text-left" style="margin-top:15px;">
                           <label class="c2" for="email">Idioma:</label>
-                          <Field name="email" type="email" class="form-control" />
-                          <!-- <ErrorMessage name="email" class="error-feedback" /> -->
+                          <Field name="lang" as="select" class="form-control">
+                              <option value="en">English</option>
+                              <option value="es">Spanish</option>
+                              <option value="fr">French</option>
+                              <option value="pt">Portuguese</option>
+                              <option value="ru">Russia</option>
+                          </Field>
+                          <ErrorMessage name="lang" class="error-feedback" />
                         </div>
                         <div class="col-lg-12 text-left" style="margin-top:15px;">
                           
@@ -289,7 +321,7 @@
                           <Field name="clientNotes" as="textarea" class="form-control" rows="4" cols="50" />
                           <ErrorMessage name="clientNotes" class="error-feedback" />
                           
-                          <p><sub style="color:#007bff;" >{{verifyReservationS}}</sub></p>
+                          <!-- <p><sub style="color:#007bff;" >{{verifyReservationS}}</sub></p> -->
                           <!-- <sub style="color:#28a745;">{{verifyReservationSS}}</sub> -->
                         </div>
                       </div>
@@ -299,13 +331,19 @@
                     <div class="col-lg-3">
                       <div class="form-group">
                         <br>
-                        <button  class="btn btn-primary btn-block" style="background-color:rgb(73,105,144);border-color:rgb(73,105,144);" :disabled="loading">
+                        <button v-if="!sendReservationSuccess"  class="btn btn-primary btn-block" style="background-color:rgb(73,105,144);border-color:rgb(73,105,144);" :disabled="sendReservationLoading">
                           <span
-                            v-show="loading"
+                            v-if="sendReservationLoading"
                             class="spinner-border spinner-border-sm"
                           ></span>
-                            {{ $t('home.t12') }}
+                            Crear reserva
                         </button>
+                        <div v-else>
+                          <h5 class="text-center">Reserva creada con exito</h5>
+                          <button class="btn btn-primary btn-block" style="background-color:rgb(73,105,144);border-color:rgb(73,105,144);" @click="sendReservationSuccess = false">
+                              OK
+                          </button>                          
+                        </div>
                       </div>
                     </div>
                   </div> 
@@ -368,21 +406,33 @@ export default {
         .max(40, "Must be maximum 40 characters!"),
     });
     const schema2 = yup.object().shape({
-      username: yup
+      hotelReservationReference: yup
         .string()
-        .required("Username is required!")
-        .min(3, "Must be at least 3 characters!")
-        .max(20, "Must be maximum 20 characters!"),
-      email: yup
+        .required('Obligatorio'),
+      clientFirstName: yup
         .string()
-        .required("Email is required!")
-        .email("Email is invalid!")
-        .max(50, "Must be maximum 50 characters!"),
-      password: yup
+        .required('Obligatorio'),
+      restaurantId: yup
         .string()
-        .required("Password is required!")
-        .min(6, "Must be at least 6 characters!")
-        .max(40, "Must be maximum 40 characters!"),
+        .required('Obligatorio'),
+      clientEmail: yup
+        .string()
+        .required('Obligatorio')
+        .email(),
+      resDate: yup
+        .string()
+        .required('Obligatorio'),
+      schedule: yup
+        .string()
+        .required('Obligatorio'),
+      people: yup
+        .string()
+        .required('Obligatorio'),
+      lang: yup
+        .string()
+        .required('Obligatorio'),
+      nores: yup
+        .string(),
     });
     const schema3 = yup.object().shape({
       username: yup
@@ -417,7 +467,9 @@ export default {
       schema,
       schema2,
       schema3,
-      
+      searchLoading : false,
+      sendReservationLoading : false,
+      sendReservationSuccess : false,
     };
   },
   computed: {
@@ -448,6 +500,36 @@ export default {
     }
   },
   methods: {
+    findRes(brazalete, setFieldValue){
+      this.searchLoading = true
+      UserService.checkAvailability({hotelReservationReference: brazalete}).then(res => {
+        this.searchLoading = false
+        if(res.data){
+          setFieldValue('clientFirstName',res.data.client.name)
+          setFieldValue('hotelReservationReference',res.data.hotelReservation.Code)
+        }
+      }).catch(() => {
+        this.searchLoading = false
+      })
+    },
+    sendReservation(values, { resetForm }){
+
+      let aux = {...values}
+      delete aux['brazalete']
+      aux.status = 'active'
+      aux.clientLastName = '.'
+
+      this.sendReservationLoading = true
+      UserService.createReservation(aux).then(() => {
+        resetForm()
+        this.sendReservationLoading = false
+        this.sendReservationSuccess = true
+
+      }).catch(() => {
+        this.sendReservationLoading = false
+      })
+
+    },
     availabilityRestaurant(dates) {
       // console.log(dates)
       UserService.getAvailabilityReservations(dates).then(
