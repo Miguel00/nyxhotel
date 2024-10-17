@@ -70,31 +70,6 @@
                         </Field>
                         <ErrorMessage name="people" class="error-feedback" />
                       </div>
-
-
-                      <!-- <div class="col-lg-12" style="margin-top:15px;">
-                          
-                          <label class="c2" for="restaurantId"> {{ $t('home.t4') }}</label>
-                            <br>
-                            <Field name="restaurantId" as="select"  class="form-control" >
-                              <option v-for="(option, index) in restaurants" :key="index"  :value="option.restaurant.id" :disabled="!option.valid">
-                                {{ option.restaurant.name }}
-                              </option>
-                            </Field>
-                            <ErrorMessage name="restaurantId"  class="error-feedback" />
-                      </div>
-
-                      <div class="col-lg-12 text-left" style="margin-top:15px;">
-                          <label>{{ $t('home.t8') }} </label>
-                          <Field name="schedule" as="select" class="form-control">
-                            <option value="18:00" >18:00</option>
-                            <option value="19:00" >19:00</option>
-                            <option value="20:00" >20:00</option>
-                            <option value="21:00" >21:00</option>
-                            <option value="22:00" >22:00</option>       
-                          </Field>
-                          <ErrorMessage name="schedule" class="error-feedback" />
-                      </div> -->
                     </div>
                   </div>
                 </div>
@@ -115,7 +90,7 @@
               </div>
             </div>
         </Form>
-        <Form  v-if="successful && dateAvailability.valid" @submit="sendReservation" :validation-schema="schema3" v-slot="{ values, setFieldValue }">
+        <Form  v-if="successful && hasAvailability" @submit="sendReservation" :validation-schema="schema3" v-slot="{ values, setFieldValue }">
             <div class="container">
               <h4 class="text-center text-white my-3">Selecciona el restaurante y horario disponible</h4>
               <div class="row justify-content-center">
@@ -182,7 +157,8 @@
               </div>
             </div>
         </Form>
-        
+        <p class="text-danger text-center" v-if="successful && !dateAvailability.valid && dateAvailabilityLoaded">{{ $t('home.t6') }}</p>
+        <h5 class="text-danger text-center" v-if="successful && dateAvailability.valid && dateAvailabilityLoaded && !hasAvailability">{{ $t('home.t28') }}</h5>
       </div>
     </div>
   </div>
@@ -270,6 +246,16 @@ export default {
       checkAvailabilityRestaurantsLoading:false,
       reservationDate:null,
     };
+  },
+  computed : {
+    hasAvailability(){
+      if(this.dateAvailability.valid && this.dateAvailability?.availability){
+        return this.dateAvailability?.availability.find(av => {
+          return av.schedules.find(sch => sch.availability >= this.people) != null
+        }) != null
+      }
+      return false
+    }
   },
   mounted() {
     // UserService.getPublicContent().then(
@@ -428,124 +414,61 @@ export default {
       reservation.people = this.people
 
       const resDatee = reservation.reservationDate
-      if(today2 == reservation.reservationDate){
-        
-        const hour = today.getHours()
-        if(hour < 14){
-          console.log("Hola12: ", reservation)
-          reservation.clientFirstName = localStorage.getItem("clientFirstName");
-          reservation.hotelReservationReference = localStorage.getItem("hotelReservationReference");
-          reservation.clientLastName = "."
-          reservation.status = "active"
-          reservation.restaurantId = Number(reservation.restaurantId)
-          reservation.people = Number(reservation.people)
-          reservation.Code = this.code
-          reservation['reservationDate'] = reservation['resDate']
-          delete reservation['resDate'];
-          reservation.reservationDate = resDatee
-          console.log("here2xc: ", reservation)
-          // console.log(reservation)
-          UserService.verifyReservation(reservation).then(
-            (response) => {
-              
-              reservation['resDate'] = reservation['reservationDate']
-              // delete reservation['reservationDate'];
-              reservation['clientEmail'] = reservation['email']
-              // delete reservation['email'];
-              if(response.data.valid){
-                // console.log("hereE: ", reservation)
-                reservation.lang = this.$i18n.locale
-                UserService.createReservation(reservation).then(
-                  (response) => {
-                    // console.log("Jiji1: ", response)
-                    const {data} = response
-                    this.verifyReservationS = this.$t('home.t13')
-                    this.loading = false
-                    this.popupTriggers.buttonTrigger = true
-                    this.successful = false
-                    console.log(data)
-                  },
-                  (error) => {
-                    console.log(error)
-                    this.verifyReservationS = this.$t('home.t14')
-                  }
-                );
-              }else if(response.data.validCode == 20){
-                    this.loading = false
-                    this.verifyReservationS = this.$t('home.t15')
-              }else if(response.data.validCode == 30){
-                    this.loading = false
-                    this.verifyReservationS = this.$t('home.t16')
-              }else if(response.data.validCode == 40){
-                    this.loading = false
-                    this.verifyReservationS = this.$t('home.t14')
-              }
-            },
-            (error) => {
-              console.log(error)
-              this.loading = false
-              this.verifyReservationS = this.$t('home.t14')
-            }
-          );
-        }else{
+      
+      if(today2 == reservation.reservationDate && today.getHours() > 14){
           this.loading = false
           this.verifyReservationS = this.$t('home.t17')
-        }
-      }else{
-        console.log(reservation)
-        reservation.clientFirstName = localStorage.getItem("hotelReservation");
-        reservation.clientFirstName = localStorage.getItem("clientFirstName");
-        reservation.hotelReservationReference = this.code
-        reservation.clientLastName = "."
-        reservation.status = "active"
-        reservation.restaurantId = Number(reservation.restaurantId)
-        reservation.people = Number(reservation.people)
-        reservation['reservationDate'] = reservation['resDate']
-        delete reservation['resDate'];
-        reservation.reservationDate = resDatee
-        reservation.lang = this.$i18n.locale
-        console.log(reservation)
-        UserService.verifyReservation(reservation).then(
-          (response) => {
-            // console.log(response.data.valid)
-            if(response.data.valid){
-              reservation['resDate'] = reservation['reservationDate']
-              delete reservation['reservationDate'];
-              reservation['clientEmail'] = reservation['email']
-              delete reservation['email'];
-              console.log(reservation)
-              UserService.createReservation(reservation).then(
-                (res) => {
-                  const {data} = res
-                  this.verifyReservationS = this.$t('home.t13')
-                  this.loading = false
-                  this.popupTriggers.buttonTrigger = true
-                  this.successful = false
-                  console.log(data)
-                },
-                (err) => {
-                  console.log(err)
-                  this.verifyReservationS = "Error"
-                }
-              );
-            }else if(response.data.validCode == 20){
-                  this.loading = false
-                  this.verifyReservationS = this.$t('home.t15')
-            }else if(response.data.validCode == 30){
-                  this.loading = false
-                  this.verifyReservationS = this.$t('home.t16')
-            }else if(response.data.validCode == 40){
-                    this.loading = false
-                    this.verifyReservationS = this.$t('home.t14')
-            }
-          },
-          (error) => {
-            console.log(error)
-            this.loading = false
-            this.verifyReservationS = "Ya cuenta con una reserva para esa fecha3"
-          }
-        );
+          return;
       }
+
+      reservation.clientFirstName = localStorage.getItem("hotelReservation");
+      reservation.clientFirstName = localStorage.getItem("clientFirstName");
+      reservation.hotelReservationReference = this.code
+      reservation.clientLastName = "."
+      reservation.status = "active"
+      reservation.restaurantId = Number(reservation.restaurantId)
+      reservation.people = Number(reservation.people)
+      reservation['reservationDate'] = reservation['resDate']
+      delete reservation['resDate'];
+      reservation.reservationDate = resDatee
+      reservation.lang = this.$i18n.locale
+      UserService.verifyReservation(reservation).then(
+        (response) => {
+          // console.log(response.data.valid)
+          if(response.data.valid){
+            reservation['resDate'] = reservation['reservationDate']
+            delete reservation['reservationDate'];
+            reservation['clientEmail'] = reservation['email']
+            delete reservation['email'];
+            UserService.createReservation(reservation).then(
+              () => {
+                this.verifyReservationS = this.$t('home.t13')
+                this.loading = false
+                this.popupTriggers.buttonTrigger = true
+                this.successful = false
+              },
+              (err) => {
+                console.log(err)
+                this.verifyReservationS = "Error"
+              }
+            );
+          }else if(response.data.validCode == 20){
+                this.loading = false
+                this.verifyReservationS = this.$t('home.t15')
+          }else if(response.data.validCode == 30){
+                this.loading = false
+                this.verifyReservationS = this.$t('home.t16')
+          }else if(response.data.validCode == 40){
+                  this.loading = false
+                  this.verifyReservationS = this.$t('home.t14')
+          }
+        },
+        (error) => {
+          console.log(error)
+          this.loading = false
+          this.verifyReservationS = "Ya cuenta con una reserva para esa fecha3"
+        }
+      );
       // console.log("Aqui: ", new Date().getMonth())
 
     },

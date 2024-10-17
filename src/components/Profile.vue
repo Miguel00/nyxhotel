@@ -252,11 +252,11 @@
                   <div class="row justify-content-center">
                     <div class="col-lg-12">
                       <div class="row">
-                        <div class="col-lg-4" style="margin-top:15px;">
+                        <div class="col-lg-2" style="margin-top:15px;">
                           
                             <label class="c2" for="restaurantId"> Restaurante</label>
                               <br>
-                              <Field name="restaurantId" as="select"  class="form-control" >
+                              <Field name="restaurantId" as="select"  class="form-control" v-model="newResRestaurantId">
                                 <!-- <option value="" disabled>Restaurant: </option> -->
                                 <option v-for="(option, index) in options" :key="index"  :value="option.id">
                                   {{ option.name }}
@@ -268,12 +268,12 @@
                                 <option v-for="drink in drinks" :key="drink" :value="drink" :selected="value && value.includes(drink)">{{ drink }}</option>
                               </Field> -->
                         </div>
-                        <div class="col-lg-4" style="margin-top:15px;">
+                        <div class="col-lg-2" style="margin-top:15px;">
                           <label> Fecha de reserva</label>
                           <!-- <label class="c2" for="password">Password</label> -->
                           <!-- Fm:  -->
                           <div class="form-group">
-                            <Field name="resDate" type="date" class="form-control" />
+                            <Field name="resDate" type="date" class="form-control" v-model="newResResDate"/>
                             <ErrorMessage name="resDate" class="error-feedback" />
                           </div>
                           <!-- <Field name="reservationDate" as="select"  class="form-control" >
@@ -281,6 +281,22 @@
                             <option :value="maxDate" >{{ maxDate }}</option>
                           </Field> -->
                           <!-- <Field name="reservationDate" type="date" :min="minDate" :max="maxDate" class="form-control" /> -->
+                        </div>
+                        <div class="col-lg-8" style="margin-top:15px;">
+                          <p>Disponibilidad</p>
+                          <span
+                            v-if="newResAvailabilityLoading"
+                            class="spinner-border spinner-border-sm"
+                          ></span>
+                          <table v-else-if="newResAvailability!=null && newResAvailability?.schedules.length>0" class="table table-bordered table-sm">
+                            <tr>
+                              <th v-for="(sch,i) in newResAvailability.schedules" :key="i">{{sch.schedule}}</th>
+                            </tr>
+                            <tr>
+                              <td v-for="(sch,i) in newResAvailability.schedules" :key="i">{{sch.availability}}</td>
+                            </tr>
+                          </table>
+                          <p v-else-if="newResAvailability!=null && newResAvailability?.schedules.length == 0" class="text-danger">No se encontró disponibilidad en ningún horario</p>
                         </div>
                         <div class="col-lg-4 text-left" style="margin-top:15px;">
                             <label>Horario </label>
@@ -470,6 +486,11 @@ export default {
       searchLoading : false,
       sendReservationLoading : false,
       sendReservationSuccess : false,
+      newResRestaurantId:"",
+      newResResDate:"",
+      newResAvailability:null,
+      newResAvailabilityLoading : false,
+      // newResSchedule:null,
     };
   },
   computed: {
@@ -485,21 +506,39 @@ export default {
         const today =  new Date()
         this.minDate = today.getFullYear() + "-" + (today.getMonth() + 1).toString().padStart(2, "0") + "-" + today.getDate().toString().padStart(2, "0");
             // this.maxDate = today.getFullYear() + "-" + (today.getMonth() + 1).toString().padStart(2, "0") + "-" + (today.getDate()+1).toString().padStart(2, "0");
-      },
-      (error) => {
-        this.content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
       }
-    );
+    ).catch(err => {
+      if(err?.response?.status == 401){
+        this.$store.dispatch('auth/logout');
+        this.$router.push('/login');
+      }
+    });
     if (!this.currentUser) {
       this.$router.push('/login');
     }
   },
+  watch : {
+    newResResDate(val){
+      this.findRestAv(this.newResRestaurantId, val)
+    },
+    newResRestaurantId(val){
+      this.findRestAv(val, this.newResResDate)
+    },
+  },
   methods: {
+    findRestAv(restaurantId, resDate){
+      if(restaurantId && resDate){
+        this.newResAvailabilityLoading = true
+        UserService.getAvailability({          
+          startDate: resDate,
+          endDate: resDate,
+          restaurantId,
+        }).then(res => {
+          this.newResAvailability = res.data[0]
+          this.newResAvailabilityLoading = false
+        })
+      }
+    },
     findRes(brazalete, setFieldValue){
       this.searchLoading = true
       UserService.checkAvailability({hotelReservationReference: brazalete}).then(res => {

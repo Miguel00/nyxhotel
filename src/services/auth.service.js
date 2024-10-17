@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://a7a4-2806-10be-8-2ebf-a118-39d-5ce4-b5d8.ngrok-free.app/';
+const API_URL = process.env.VUE_APP_API;
 
 class AuthService {
   login(user) {

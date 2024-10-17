@@ -37,8 +37,12 @@ class UserService {
     return axios.get(API_URL + 'reservations', { headers: authHeader() });
   }
 
-  getAvailabilityReservations() {
-    return axios.get(API_URL + 'restaurant-availabilities', { headers: authHeader() });
+  getAvailabilityReservations(params = {}) {
+    return axios.get(API_URL + 'restaurant-availabilities',{ params, headers: authHeader() });
+  }
+  
+  getAvailability(params = {}) {
+    return axios.get(API_URL + 'availability',{ params, headers: authHeader() });
   }
 
   dateRange(dateRange) {
