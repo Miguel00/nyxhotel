@@ -1,6 +1,6 @@
 {
   "home":{
-    "t1": "#Pulseira ou #Reserva:",
+    "t1": "#Pulseira",
     "t2": "Verificar",
     "t3": "Este campo é obrigatório",
     "t4": "Restaurante: ",
@@ -26,5 +26,12 @@
     "t24": ", obrigado pela sua reserva!",
     "t25": "Se você reservou com 'Somente café da manhã' como seu plano de refeição. Não são necessárias reservas para Umami ou Chianti. As reservas de cortesia para jantar são apenas para o plano de refeições 'All Inclusive' com um mínimo de 3 a 5 noites em diante.",
     "t26": "Esta reserva já foi verificada"
-  }
+  },
+      "Por favor agregue una letra al inicio de acuerdo al color de su brazalete": "Por favor adicione uma letra no início de acordo com a cor da sua pulseira",
+  "para amarillo": "para amarelo",
+  "para azul": "para azul",
+  "para blanco": "para branco",
+  "para gris": "para cinza",
+  "para negro": "para preto",
+  "para rosa": "para rosa"
 }

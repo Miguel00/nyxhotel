@@ -1,6 +1,6 @@
 {
   "home":{
-    "t1": "#Bracelet ou #Réservation :",
+    "t1": "#Bracelet",
     "t2": "Vérifier",
     "t3": "Ce champ est requis",
     "t4": "Restaurant: ",
@@ -26,5 +26,13 @@
     "t24": ", merci pour votre réservation !  ",
     "t25": "Si vous avez réservé avec 'Petit-déjeuner seulement' comme plan de repas. Aucune réservation n'est requise pour Umami ou Chianti. Les réservations gratuites pour le dîner sont uniquement pour le régime 'All Inclusive' à partir de 3 à 5 nuits minimum.",
     "t26": "Cette réservation a déjà été validée"
-  }
+  },
+  "Por favor agregue una letra al inicio de acuerdo al color de su brazalete":"Merci d'ajouter une lettre au début en fonction de la couleur de votre bracelet",
+  "para amarillo":"pour le jaune",
+  "para azul":"pour le bleu",
+  "para blanco":"pour le blanc",
+  "para gris":"pour le gris",
+  "para negro":"pour le noir",
+  "para rosa":"pour le rose"
+
 }

@@ -1,6 +1,6 @@
 {
   "home":{
-    "t1": "#Reservation",
+    "t1": "#Bracelet",
     "t2": "Verify",
     "t3": "This field is required",
     "t4": "Restaurant: ",
@@ -28,5 +28,12 @@
     "t26": "This reservation has already checked out",
     "t27": "Make reservation",
     "t28": "No availability found",
-  }
+  },
+  "Por favor agregue una letra al inicio de acuerdo al color de su brazalete":"Please add a letter at the beginning according to the color of your bracelet",
+  "para amarillo":"for yellow",
+  "para azul":"for blue",
+  "para blanco":"for white",
+  "para gris":"for gray",
+  "para negro":"for black",
+  "para rosa":"for pink"
 }

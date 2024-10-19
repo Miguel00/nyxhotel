@@ -14,12 +14,11 @@
             <div class="row justify-content-center">
               <div class="col-lg-4 my-auto">
                 <div class="form-group my-auto">
-                  <label class="c2" for="hotelReservationReference"> {{ $t('home.t1') }} {{minDate2}}</label>
+                  <label class="c2" for="hotelReservationReference"> {{ $t('home.t1') }}:</label>
                   <Field name="hotelReservationReference" type="text" class="form-control" />
-
                   <ErrorMessage name="hotelReservationReference" class="error-feedback " />
-                  
                   <p><sub style="color:red;">{{verifyReservation}}</sub></p>
+
                 </div>
               </div>
             </div>
@@ -35,6 +34,17 @@
                     ></span>
                     {{ $t('home.t2') }}
                   </button>
+                  <div class="text-white mt-3">
+                    <h4>{{$t("Por favor agregue una letra al inicio de acuerdo al color de su brazalete")}}:</h4>
+                    <ul>
+                      <li>Y {{$t('para amarillo')}}</li>
+                      <li>B {{$t('para azul')}}</li>
+                      <li>W {{$t('para blanco')}}</li>
+                      <li>G {{$t('para gris')}}</li>
+                      <li>N {{$t('para negro')}}</li>
+                      <li>R {{$t('para rosa')}}</li>
+                  </ul>
+                  </div>
                 </div>
               </div>
             </div>          
