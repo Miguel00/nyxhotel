@@ -102,7 +102,7 @@
         </Form>
         <Form  v-if="successful && hasAvailability" @submit="sendReservation" :validation-schema="schema3" v-slot="{ values, setFieldValue }">
             <div class="container">
-              <h4 class="text-center text-white my-3">Selecciona el restaurante y horario disponible</h4>
+              <h4 class="text-center text-white my-3">{{$t('Selecciona el restaurante y horario disponible')}}</h4>
               <div class="row justify-content-center">
                 <div class="col-md-3 col-6 my-2" v-for="av in dateAvailability.availability" :key="av.restaurant.id">
                   <h3 class="text-white text-center">{{av.restaurant.name}}</h3>

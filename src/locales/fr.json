@@ -25,7 +25,8 @@
     "t23": "Bonjour",
     "t24": ", merci pour votre réservation !  ",
     "t25": "Si vous avez réservé avec 'Petit-déjeuner seulement' comme plan de repas. Aucune réservation n'est requise pour Umami ou Chianti. Les réservations gratuites pour le dîner sont uniquement pour le régime 'All Inclusive' à partir de 3 à 5 nuits minimum.",
-    "t26": "Cette réservation a déjà été validée"
+    "t26": "Cette réservation a déjà été validée",
+    "t27": "faire une réservation"
   },
   "Por favor agregue una letra al inicio de acuerdo al color de su brazalete":"Merci d'ajouter une lettre au début en fonction de la couleur de votre bracelet",
   "para amarillo":"pour le jaune",
@@ -33,6 +34,9 @@
   "para blanco":"pour le blanc",
   "para gris":"pour le gris",
   "para negro":"pour le noir",
-  "para rosa":"pour le rose"
-
+  "para rosa":"pour le rose",
+  "Selecciona el restaurante y horario disponible":"Sélectionnez le restaurant et l'heure disponible",
+  "¿Estas seguro que deseas cancelar tu reserva?":"Etes-vous sûr de vouloir annuler votre réservation ?",
+  "Cancelar reserva":"Annuler la réservation",
+  "Reserva cancelada con éxito":"Réservation annulée avec succès"
 }

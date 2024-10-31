@@ -35,5 +35,9 @@
   "para blanco":"for white",
   "para gris":"for gray",
   "para negro":"for black",
-  "para rosa":"for pink"
+  "para rosa":"for pink",
+  "Selecciona el restaurante y horario disponible":"Select the restaurant and available time",
+  "¿Estas seguro que deseas cancelar tu reserva?":"Are you sure you want to cancel your reservation?",
+  "Cancelar reserva":"Cancel reservation",
+  "Reserva cancelada con éxito":"Reservation cancelled successfully"
 }
