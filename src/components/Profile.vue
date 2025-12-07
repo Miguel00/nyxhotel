@@ -49,18 +49,12 @@
                   </div>
                   <div class="col-lg-6 text-left">
                     <span style="text-align:left;">Horario: </span>
-                    <Field name="schedule" as="select" class="form-control">
+                      <Field name="schedule" type="time" class="form-control" />
+<!--                     <Field name="schedule" as="select" class="form-control">
                       <option value="" disabled selected>Horario: </option>
                       <option :value="`${i}:00`" v-for="i in [12,13,14,15,16,17,18,19,20,21,22,23]" :key="i">{{`${i}:00`}}</option>
-                      <!-- <option value="19:00" >19:00 </option> -->
-                      <!-- <option value="20:00" >20:00 </option> -->
-                      <!-- <option value="21:00" >21:00 </option> -->
-                      <!-- <option value="22:00" >22:00 </option> -->
-                      <!-- <option v-for="(option, index) in options" :key="index"  :value="option.id">
-                        {{ option.name }}
-                      </option> -->
                     </Field>
-                  </div>
+ -->                  </div>
                 </div>
                 <div class="row justify-content-center">
                   <div class="col-lg-12">
@@ -283,7 +277,7 @@
                           <!-- <Field name="reservationDate" type="date" :min="minDate" :max="maxDate" class="form-control" /> -->
                         </div>
                         <div class="col-lg-8" style="margin-top:15px;">
-                          <p>Disponibilidad</p>
+                          <p>Disponibilidad (24hrs)</p>
                           <span
                             v-if="newResAvailabilityLoading"
                             class="spinner-border spinner-border-sm"
@@ -300,10 +294,11 @@
                         </div>
                         <div class="col-lg-4 text-left" style="margin-top:15px;">
                             <label>Horario </label>
-                            <Field name="schedule" as="select" class="form-control">
+                             <Field name="schedule" type="time" class="form-control" />
+<!--                             <Field name="schedule" as="select" class="form-control">
                                 <option :value="`${i}:00`" v-for="i in [12,13,14,15,16,17,18,19,20,21,22,23]" :key="i">{{`${i}:00`}}</option>
                             </Field>
-                            <ErrorMessage name="schedule" class="error-feedback" />
+ -->                            <ErrorMessage name="schedule" class="error-feedback" />
                         </div>
                         <div class="col-lg-4 text-left" style="margin-top:15px;">
                           <label>{{ $t('home.t9') }}</label>

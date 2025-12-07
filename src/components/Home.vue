@@ -350,11 +350,12 @@ export default {
             let tomorrow = new Date();
 
             tomorrow.setDate(tomorrow.getDate() + 1);
-            const a = tomorrow.toLocaleDateString().split("/")[0].padStart(2, "0")
-            const b = tomorrow.toLocaleDateString().split("/")[1].padStart(2, "0")
+            // const a = tomorrow.toLocaleDateString().split("/")[0].padStart(2, "0")
+            // const b = tomorrow.toLocaleDateString().split("/")[1].padStart(2, "0")
 
             this.minDate = today.getFullYear() + "-" + (today.getMonth() + 1).toString().padStart(2, "0") + "-" + today.getDate().toString().padStart(2, "0")
-            this.maxDate = today.getFullYear() + "-" + b + "-" + a
+            this.maxDate = tomorrow.getFullYear() + "-" + (tomorrow.getMonth() + 1).toString().padStart(2, "0") + "-" + tomorrow.getDate().toString().padStart(2, "0")
+            // this.maxDate = today.getFullYear() + "-" + b + "-" + a
 
             
             // this.verifyFormSchedule(this.minDate, this.maxDate)
@@ -471,6 +472,9 @@ export default {
           }else if(response.data.validCode == 40){
                   this.loading = false
                   this.verifyReservationS = this.$t('home.t14')
+          }else if(response.data.validCode == 60){
+                  this.loading = false
+                  this.verifyReservationS = this.$t('home.t17')
           }
         },
         (error) => {
